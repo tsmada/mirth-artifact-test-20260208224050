@@ -1,0 +1,290 @@
+<channel>
+  <id>71210001-0001-0001-0001-000000000001</id>
+  <name>HL7v2 to JSON Transform</name>
+  <description>Extract patient/lab data from HL7v2 and output as JSON using JavaScript</description>
+  <enabled>true</enabled>
+  <revision>3</revision>
+  <sourceConnector version="3.9.1">
+    <metaDataId>0</metaDataId>
+    <name>sourceConnector</name>
+    <properties class="com.mirth.connect.connectors.tcp.TcpReceiverProperties" version="3.9.1">
+      <pluginProperties></pluginProperties>
+      <listenerConnectorProperties version="3.9.1">
+        <host>0.0.0.0</host>
+        <port>6670</port>
+      </listenerConnectorProperties>
+      <sourceConnectorProperties version="3.9.1">
+        <responseVariable>None</responseVariable>
+        <respondAfterProcessing>true</respondAfterProcessing>
+        <processBatch>false</processBatch>
+        <firstResponse>false</firstResponse>
+        <processingThreads>1</processingThreads>
+        <resourceIds class="linked-hash-map">
+          <entry>
+            <string>Default Resource</string>
+            <string>[Default Resource]</string>
+          </entry>
+        </resourceIds>
+        <queueBufferSize>1000</queueBufferSize>
+      </sourceConnectorProperties>
+      <transmissionModeProperties class="com.mirth.connect.model.transmission.framemode.FrameModeProperties" version="3.9.1">
+        <pluginPointName>MLLP</pluginPointName>
+        <startOfMessageBytes>0B</startOfMessageBytes>
+        <endOfMessageBytes>1C0D</endOfMessageBytes>
+      </transmissionModeProperties>
+      <serverMode>true</serverMode>
+      <remoteAddress></remoteAddress>
+      <remotePort></remotePort>
+      <overrideLocalBinding>false</overrideLocalBinding>
+      <reconnectInterval>5000</reconnectInterval>
+      <receiveTimeout>0</receiveTimeout>
+      <bufferSize>65536</bufferSize>
+      <maxConnections>10</maxConnections>
+      <keepConnectionOpen>true</keepConnectionOpen>
+      <dataTypeBinary>false</dataTypeBinary>
+      <charsetEncoding>DEFAULT_ENCODING</charsetEncoding>
+      <respondOnNewConnection>EACH_MESSAGE</respondOnNewConnection>
+      <responseAddress></responseAddress>
+      <responsePort></responsePort>
+    </properties>
+    <transformer version="3.9.1">
+      <elements>
+        <com.mirth.connect.plugins.javascriptstep.JavaScriptStep version="3.9.1">
+          <name>Extract to JSON</name>
+          <sequenceNumber>0</sequenceNumber>
+          <enabled>true</enabled>
+          <script>// Determine message type and extract accordingly
+var msgType = msg[&apos;MSH&apos;][&apos;MSH.9&apos;][&apos;MSH.9.1&apos;].toString();
+var result;
+
+if (msgType === &apos;ADT&apos;) {
+  // Extract patient demographics from ADT
+  result = {
+    mrn: msg[&apos;PID&apos;][&apos;PID.3&apos;][&apos;PID.3.1&apos;].toString(),
+    lastName: msg[&apos;PID&apos;][&apos;PID.5&apos;][&apos;PID.5.1&apos;].toString(),
+    firstName: msg[&apos;PID&apos;][&apos;PID.5&apos;][&apos;PID.5.2&apos;].toString(),
+    middleName: msg[&apos;PID&apos;][&apos;PID.5&apos;][&apos;PID.5.3&apos;].toString() || &apos;&apos;,
+    dob: msg[&apos;PID&apos;][&apos;PID.7&apos;][&apos;PID.7.1&apos;].toString(),
+    gender: msg[&apos;PID&apos;][&apos;PID.8&apos;][&apos;PID.8.1&apos;].toString(),
+    address: {
+      street: msg[&apos;PID&apos;][&apos;PID.11&apos;][&apos;PID.11.1&apos;].toString(),
+      city: msg[&apos;PID&apos;][&apos;PID.11&apos;][&apos;PID.11.3&apos;].toString(),
+      state: msg[&apos;PID&apos;][&apos;PID.11&apos;][&apos;PID.11.4&apos;].toString(),
+      zip: msg[&apos;PID&apos;][&apos;PID.11&apos;][&apos;PID.11.5&apos;].toString()
+    },
+    phone: msg[&apos;PID&apos;][&apos;PID.13&apos;][&apos;PID.13.1&apos;].toString(),
+    ssn: msg[&apos;PID&apos;][&apos;PID.19&apos;][&apos;PID.19.1&apos;].toString() || &apos;&apos;
+  };
+
+  // Store in channel map for validation
+  $c(&apos;extractedPatient&apos;, result);
+
+} else if (msgType === &apos;ORU&apos;) {
+  // Extract lab results from ORU
+  var obxSegments = msg[&apos;OBX&apos;];
+  var results = [];
+
+  // Handle single OBX or multiple OBX segments
+  var obxList = obxSegments.length ? obxSegments : [obxSegments];
+
+  for (var i = 0; i &lt; obxList.length(); i++) {
+    var obx = obxList[i];
+    results.push({
+      code: obx[&apos;OBX.3&apos;][&apos;OBX.3.1&apos;].toString(),
+      name: obx[&apos;OBX.3&apos;][&apos;OBX.3.2&apos;].toString(),
+      value: parseFloat(obx[&apos;OBX.5&apos;][&apos;OBX.5.1&apos;].toString()) || obx[&apos;OBX.5&apos;][&apos;OBX.5.1&apos;].toString(),
+      units: obx[&apos;OBX.6&apos;][&apos;OBX.6.1&apos;].toString(),
+      referenceRange: obx[&apos;OBX.7&apos;][&apos;OBX.7.1&apos;].toString(),
+      flag: obx[&apos;OBX.8&apos;][&apos;OBX.8.1&apos;].toString(),
+      status: obx[&apos;OBX.11&apos;][&apos;OBX.11.1&apos;].toString()
+    });
+  }
+
+  result = {
+    patient: {
+      mrn: msg[&apos;PID&apos;][&apos;PID.3&apos;][&apos;PID.3.1&apos;].toString(),
+      name: msg[&apos;PID&apos;][&apos;PID.5&apos;].toString()
+    },
+    order: {
+      orderId: msg[&apos;OBR&apos;][&apos;OBR.2&apos;][&apos;OBR.2.1&apos;].toString(),
+      specimenId: msg[&apos;OBR&apos;][&apos;OBR.3&apos;][&apos;OBR.3.1&apos;].toString(),
+      testCode: msg[&apos;OBR&apos;][&apos;OBR.4&apos;][&apos;OBR.4.1&apos;].toString(),
+      testName: msg[&apos;OBR&apos;][&apos;OBR.4&apos;][&apos;OBR.4.2&apos;].toString(),
+      orderingProvider: msg[&apos;OBR&apos;][&apos;OBR.16&apos;].toString(),
+      collectionTime: msg[&apos;OBR&apos;][&apos;OBR.7&apos;][&apos;OBR.7.1&apos;].toString(),
+      resultTime: msg[&apos;OBR&apos;][&apos;OBR.22&apos;][&apos;OBR.22.1&apos;].toString(),
+      status: msg[&apos;OBR&apos;][&apos;OBR.25&apos;][&apos;OBR.25.1&apos;].toString()
+    },
+    results: results
+  };
+
+  // Store in channel map for validation
+  $c(&apos;extractedLabResults&apos;, result);
+}
+
+// Set output as JSON string
+tmp = JSON.stringify(result, null, 2);</script>
+        </com.mirth.connect.plugins.javascriptstep.JavaScriptStep>
+      </elements>
+      <inboundDataType>HL7V2</inboundDataType>
+      <outboundDataType>RAW</outboundDataType>
+      <inboundProperties class="com.mirth.connect.plugins.datatypes.hl7v2.HL7v2DataTypeProperties" version="3.9.1">
+        <serializationProperties class="com.mirth.connect.plugins.datatypes.hl7v2.HL7v2SerializationProperties" version="3.9.1">
+          <handleRepetitions>true</handleRepetitions>
+          <handleSubcomponents>true</handleSubcomponents>
+          <useStrictParser>false</useStrictParser>
+          <useStrictValidation>false</useStrictValidation>
+          <stripNamespaces>true</stripNamespaces>
+          <segmentDelimiter></segmentDelimiter>
+          <convertLineBreaks>true</convertLineBreaks>
+        </serializationProperties>
+        <deserializationProperties class="com.mirth.connect.plugins.datatypes.hl7v2.HL7v2DeserializationProperties" version="3.9.1">
+          <useStrictParser>false</useStrictParser>
+          <useStrictValidation>false</useStrictValidation>
+          <segmentDelimiter></segmentDelimiter>
+        </deserializationProperties>
+        <batchProperties class="com.mirth.connect.plugins.datatypes.hl7v2.HL7v2BatchProperties" version="3.9.1">
+          <splitType>MSH_Segment</splitType>
+          <batchScript></batchScript>
+        </batchProperties>
+        <responseGenerationProperties class="com.mirth.connect.plugins.datatypes.hl7v2.HL7v2ResponseGenerationProperties" version="3.9.1">
+          <segmentDelimiter></segmentDelimiter>
+          <successfulACKCode>AA</successfulACKCode>
+          <successfulACKMessage></successfulACKMessage>
+          <errorACKCode>AE</errorACKCode>
+          <errorACKMessage></errorACKMessage>
+          <rejectedACKCode>AR</rejectedACKCode>
+          <rejectedACKMessage></rejectedACKMessage>
+          <msh15ACKAccept>false</msh15ACKAccept>
+          <dateFormat>yyyyMMddHHmmss.SSS</dateFormat>
+        </responseGenerationProperties>
+        <responseValidationProperties class="com.mirth.connect.plugins.datatypes.hl7v2.HL7v2ResponseValidationProperties" version="3.9.1">
+          <successfulACKCode>AA,CA</successfulACKCode>
+          <errorACKCode>AE,CE</errorACKCode>
+          <rejectedACKCode>AR,CR</rejectedACKCode>
+          <validateMessageControlId>true</validateMessageControlId>
+          <originalMessageControlId>Destination_Encoded</originalMessageControlId>
+          <originalIdMapVariable></originalIdMapVariable>
+        </responseValidationProperties>
+      </inboundProperties>
+      <outboundProperties class="com.mirth.connect.plugins.datatypes.raw.RawDataTypeProperties" version="3.9.1">
+        <batchProperties class="com.mirth.connect.plugins.datatypes.raw.RawBatchProperties" version="3.9.1">
+          <splitType>JavaScript</splitType>
+          <batchScript></batchScript>
+        </batchProperties>
+      </outboundProperties>
+    </transformer>
+    <filter version="3.9.1">
+      <elements></elements>
+    </filter>
+    <transportName>TCP Listener</transportName>
+    <mode>SOURCE</mode>
+    <enabled>true</enabled>
+    <waitForPrevious>true</waitForPrevious>
+  </sourceConnector>
+  <destinationConnectors>
+    <connector>
+      <connector version="3.9.1">
+        <metaDataId>1</metaDataId>
+        <name>JSON Output</name>
+        <properties class="com.mirth.connect.connectors.vm.VmDispatcherProperties" version="3.9.1">
+          <pluginProperties></pluginProperties>
+          <destinationConnectorProperties version="3.9.1">
+            <queueEnabled>false</queueEnabled>
+            <sendFirst>false</sendFirst>
+            <retryIntervalMillis>10000</retryIntervalMillis>
+            <regenerateTemplate>false</regenerateTemplate>
+            <retryCount>0</retryCount>
+            <rotate>false</rotate>
+            <includeFilterTransformer>false</includeFilterTransformer>
+            <threadCount>1</threadCount>
+            <threadAssignmentVariable></threadAssignmentVariable>
+            <validateResponse>false</validateResponse>
+            <resourceIds class="linked-hash-map">
+              <entry>
+                <string>Default Resource</string>
+                <string>[Default Resource]</string>
+              </entry>
+            </resourceIds>
+            <queueBufferSize>1000</queueBufferSize>
+            <reattachAttachments>true</reattachAttachments>
+          </destinationConnectorProperties>
+          <channelId>sink</channelId>
+          <channelTemplate>${message.encodedData}</channelTemplate>
+          <mapVariables></mapVariables>
+        </properties>
+        <transformer version="3.9.1">
+          <elements></elements>
+          <inboundDataType>RAW</inboundDataType>
+          <outboundDataType>RAW</outboundDataType>
+          <inboundProperties class="com.mirth.connect.plugins.datatypes.raw.RawDataTypeProperties" version="3.9.1">
+            <batchProperties class="com.mirth.connect.plugins.datatypes.raw.RawBatchProperties" version="3.9.1">
+              <splitType>JavaScript</splitType>
+              <batchScript></batchScript>
+            </batchProperties>
+          </inboundProperties>
+          <outboundProperties class="com.mirth.connect.plugins.datatypes.raw.RawDataTypeProperties" version="3.9.1">
+            <batchProperties class="com.mirth.connect.plugins.datatypes.raw.RawBatchProperties" version="3.9.1">
+              <splitType>JavaScript</splitType>
+              <batchScript></batchScript>
+            </batchProperties>
+          </outboundProperties>
+        </transformer>
+        <responseTransformer version="3.9.1">
+          <elements></elements>
+          <inboundDataType>RAW</inboundDataType>
+          <outboundDataType>RAW</outboundDataType>
+          <inboundProperties class="com.mirth.connect.plugins.datatypes.raw.RawDataTypeProperties" version="3.9.1">
+            <batchProperties class="com.mirth.connect.plugins.datatypes.raw.RawBatchProperties" version="3.9.1">
+              <splitType>JavaScript</splitType>
+              <batchScript></batchScript>
+            </batchProperties>
+          </inboundProperties>
+          <outboundProperties class="com.mirth.connect.plugins.datatypes.raw.RawDataTypeProperties" version="3.9.1">
+            <batchProperties class="com.mirth.connect.plugins.datatypes.raw.RawBatchProperties" version="3.9.1">
+              <splitType>JavaScript</splitType>
+              <batchScript></batchScript>
+            </batchProperties>
+          </outboundProperties>
+        </responseTransformer>
+        <filter version="3.9.1">
+          <elements></elements>
+        </filter>
+        <transportName>Channel Writer</transportName>
+        <mode>DESTINATION</mode>
+        <enabled>true</enabled>
+        <waitForPrevious>true</waitForPrevious>
+      </connector>
+    </connector>
+  </destinationConnectors>
+  <preprocessingScript>// Preprocessor: store raw message for debugging
+return message;</preprocessingScript>
+  <postprocessingScript>// Postprocessor
+return;</postprocessingScript>
+  <deployScript>// Deploy script
+return;</deployScript>
+  <undeployScript>// Undeploy script
+return;</undeployScript>
+  <properties version="3.9.1">
+    <clearGlobalChannelMap>true</clearGlobalChannelMap>
+    <messageStorageMode>DEVELOPMENT</messageStorageMode>
+    <encryptData>false</encryptData>
+    <removeContentOnCompletion>false</removeContentOnCompletion>
+    <removeOnlyFilteredOnCompletion>false</removeOnlyFilteredOnCompletion>
+    <removeAttachmentsOnCompletion>false</removeAttachmentsOnCompletion>
+    <initialState>STARTED</initialState>
+    <storeAttachments>true</storeAttachments>
+    <metaDataColumns></metaDataColumns>
+    <archiveEnabled>true</archiveEnabled>
+    <attachmentProperties version="3.9.1">
+      <type>None</type>
+      <properties></properties>
+    </attachmentProperties>
+    <resourceIds class="linked-hash-map">
+      <entry>
+        <string>Default Resource</string>
+        <string>[Default Resource]</string>
+      </entry>
+    </resourceIds>
+  </properties>
+</channel>

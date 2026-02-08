@@ -1,0 +1,7 @@
+id: 76100001-0001-0001-0001-000000000002
+name: Code Template Function Test
+version: 3.9.1
+revision: 1
+enabled: true
+description: Tests calling code template functions from channel transformers
+nextMetaDataId: 2

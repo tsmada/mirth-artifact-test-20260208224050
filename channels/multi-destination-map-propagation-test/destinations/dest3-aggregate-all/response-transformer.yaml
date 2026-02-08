@@ -1,0 +1,3 @@
+version: 3.9.1
+inboundDataType: HL7V2
+outboundDataType: HL7V2

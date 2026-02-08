@@ -1,0 +1,38 @@
+name: File Writer Output
+metaDataId: 1
+transportName: File Writer
+mode: DESTINATION
+enabled: true
+propertiesClass: ''
+waitForPrevious: true
+properties:
+  class: com.mirth.connect.connectors.file.FileDispatcherProperties
+  destinationConnectorProperties:
+    queueEnabled: 'false'
+    retryIntervalMillis: '10000'
+    retryCount: '0'
+    '#text': |2-
+
+                
+                
+                
+              
+  scheme: FILE
+  host: /tmp/mirth-file-reader/outbox
+  outputPattern: output_${UUID}.hl7
+  outputAppend: 'false'
+  binary: 'false'
+  charsetEncoding: UTF-8
+  template: ${message.encodedData}
+  '#text': |2-
+
+            
+            
+            
+            
+            
+            
+            
+            
+            
+          

@@ -1,0 +1,57 @@
+name: sourceConnector
+metaDataId: 0
+transportName: TCP Listener
+mode: SOURCE
+enabled: true
+propertiesClass: com.mirth.connect.connectors.tcp.TcpReceiverProperties
+propertiesVersion: 3.8.0
+waitForPrevious: true
+properties:
+  pluginProperties: ''
+  listenerConnectorProperties:
+    host: 0.0.0.0
+    port: '6670'
+    '#text': '                      '
+    '@_version': 3.8.0
+  sourceConnectorProperties:
+    responseVariable: d1
+    respondAfterProcessing: 'true'
+    processBatch: 'false'
+    firstResponse: 'true'
+    processingThreads: '1'
+    resourceIds:
+      entry:
+        - string:
+            - Default Resource
+            - '[Default Resource]'
+          '#text': '                                  '
+      '#text': '                  '
+      '@_class': linked-hash-map
+    queueBufferSize: '1000'
+    '#text': '                                                              '
+    '@_version': 3.8.0
+  transmissionModeProperties:
+    pluginPointName: MLLP
+    startOfMessageBytes: 0B
+    endOfMessageBytes: 1C0D
+    useMLLPv2: 'false'
+    ackBytes: '06'
+    nackBytes: '15'
+    maxRetries: '2'
+    '#text': '                                                              '
+    '@_class': com.mirth.connect.plugins.mllpmode.MLLPModeProperties
+  serverMode: 'true'
+  remoteAddress: ''
+  remotePort: ''
+  overrideLocalBinding: 'false'
+  reconnectInterval: '5000'
+  receiveTimeout: '0'
+  bufferSize: '65536'
+  maxConnections: '10'
+  keepConnectionOpen: 'true'
+  dataTypeBinary: 'false'
+  charsetEncoding: DEFAULT_ENCODING
+  respondOnNewConnection: '0'
+  responseAddress: ''
+  responsePort: ''
+  '#text': '                                                                                                                '

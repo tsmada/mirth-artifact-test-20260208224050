@@ -1,0 +1,7 @@
+id: 71500001-0001-0001-0001-000000000002
+name: Multi-Destination Map Propagation Test
+version: 3.9.1
+revision: 1
+enabled: true
+description: Tests $c values propagation from source to all destinations
+nextMetaDataId: 4

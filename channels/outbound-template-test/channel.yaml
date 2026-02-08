@@ -1,0 +1,7 @@
+id: 71300001-0001-0001-0001-000000000001
+name: Outbound Template Test
+version: 3.9.1
+revision: 2
+enabled: true
+description: Tests outbound template (tmp) initialization and XML building from HL7v2
+nextMetaDataId: 2

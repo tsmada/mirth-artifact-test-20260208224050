@@ -1,0 +1,66 @@
+name: sourceConnector
+metaDataId: 0
+transportName: File Reader
+mode: SOURCE
+enabled: true
+propertiesClass: ''
+properties:
+  class: com.mirth.connect.connectors.file.FileReceiverProperties
+  pollConnectorProperties:
+    pollingType: INTERVAL
+    pollOnStart: 'true'
+    pollingFrequency: '3000'
+    '#text': |2-
+
+              
+              
+              
+            
+  sourceConnectorProperties:
+    responseVariable: None
+    respondAfterProcessing: 'true'
+    processBatch: 'false'
+    firstResponse: 'false'
+    processingThreads: '1'
+    '#text': |2-
+
+              
+              
+              
+              
+              
+            
+  scheme: FILE
+  host: /tmp/mirth-file-reader/inbox
+  fileFilter: '*.hl7'
+  regex: 'false'
+  directoryRecursion: 'false'
+  ignoreDot: 'true'
+  afterProcessingAction: MOVE
+  moveToDirectory: /tmp/mirth-file-reader/processed
+  moveToFileName: ${originalFilename}
+  checkFileAge: 'false'
+  fileAge: '0'
+  binary: 'false'
+  charsetEncoding: UTF-8
+  sortBy: date
+  '#text': |2-
+
+          
+          
+          
+          
+          
+          
+          
+          
+          
+          
+          
+          
+          
+          
+          
+          
+          
+        

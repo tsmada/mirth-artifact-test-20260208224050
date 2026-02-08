@@ -1,0 +1,41 @@
+name: Write to Channel Reader Channel
+metaDataId: 1
+transportName: Channel Writer
+mode: DESTINATION
+enabled: true
+propertiesClass: com.mirth.connect.connectors.vm.VmDispatcherProperties
+propertiesVersion: 3.8.0
+waitForPrevious: true
+properties:
+  pluginProperties: ''
+  destinationConnectorProperties:
+    queueEnabled: 'false'
+    sendFirst: 'false'
+    retryIntervalMillis: '10000'
+    regenerateTemplate: 'false'
+    retryCount: '0'
+    rotate: 'false'
+    includeFilterTransformer: 'false'
+    threadCount: '1'
+    threadAssignmentVariable: ''
+    validateResponse: 'false'
+    resourceIds:
+      entry:
+        - string:
+            - Default Resource
+            - '[Default Resource]'
+          '#text': '                                        '
+      '#text': '                      '
+      '@_class': linked-hash-map
+    queueBufferSize: '1000'
+    reattachAttachments: 'true'
+    '#text': '                                                                                                                                          '
+    '@_version': 3.8.0
+  channelId: f0756d75-b914-4c6b-9149-b062d8512238
+  channelTemplate: ${message.encodedData}
+  mapVariables:
+    string:
+      - localAddress
+      - localPort
+    '#text': '                            '
+  '#text': '                                              '

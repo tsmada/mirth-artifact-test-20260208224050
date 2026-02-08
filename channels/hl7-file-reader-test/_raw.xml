@@ -1,0 +1,96 @@
+<channel>
+  <id>a1b2c3d4-e5f6-7890-abcd-ef1234567890</id>
+  <name>HL7 File Reader Test</name>
+  <description>File Reader channel - polls /tmp/mirth-file-reader/inbox for HL7 files</description>
+  <enabled>true</enabled>
+  <revision>2</revision>
+  <sourceConnector>
+    <metaDataId>0</metaDataId>
+    <name>sourceConnector</name>
+    <properties>
+      <class>com.mirth.connect.connectors.file.FileReceiverProperties</class>
+      <pollConnectorProperties>
+        <pollingType>INTERVAL</pollingType>
+        <pollOnStart>true</pollOnStart>
+        <pollingFrequency>3000</pollingFrequency>
+      </pollConnectorProperties>
+      <sourceConnectorProperties>
+        <responseVariable>None</responseVariable>
+        <respondAfterProcessing>true</respondAfterProcessing>
+        <processBatch>false</processBatch>
+        <firstResponse>false</firstResponse>
+        <processingThreads>1</processingThreads>
+      </sourceConnectorProperties>
+      <scheme>FILE</scheme>
+      <host>/tmp/mirth-file-reader/inbox</host>
+      <fileFilter>*.hl7</fileFilter>
+      <regex>false</regex>
+      <directoryRecursion>false</directoryRecursion>
+      <ignoreDot>true</ignoreDot>
+      <afterProcessingAction>MOVE</afterProcessingAction>
+      <moveToDirectory>/tmp/mirth-file-reader/processed</moveToDirectory>
+      <moveToFileName>${originalFilename}</moveToFileName>
+      <checkFileAge>false</checkFileAge>
+      <fileAge>0</fileAge>
+      <binary>false</binary>
+      <charsetEncoding>UTF-8</charsetEncoding>
+      <sortBy>date</sortBy>
+    </properties>
+    <transformer>
+      <inboundDataType>HL7V2</inboundDataType>
+      <outboundDataType>HL7V2</outboundDataType>
+    </transformer>
+    <filter></filter>
+    <transportName>File Reader</transportName>
+    <mode>SOURCE</mode>
+    <enabled>true</enabled>
+  </sourceConnector>
+  <destinationConnectors>
+    <connector>
+      <metaDataId>1</metaDataId>
+      <name>File Writer Output</name>
+      <properties>
+        <class>com.mirth.connect.connectors.file.FileDispatcherProperties</class>
+        <destinationConnectorProperties>
+          <queueEnabled>false</queueEnabled>
+          <retryIntervalMillis>10000</retryIntervalMillis>
+          <retryCount>0</retryCount>
+        </destinationConnectorProperties>
+        <scheme>FILE</scheme>
+        <host>/tmp/mirth-file-reader/outbox</host>
+        <outputPattern>output_${UUID}.hl7</outputPattern>
+        <outputAppend>false</outputAppend>
+        <binary>false</binary>
+        <charsetEncoding>UTF-8</charsetEncoding>
+        <template>${message.encodedData}</template>
+      </properties>
+      <transformer>
+        <inboundDataType>HL7V2</inboundDataType>
+        <outboundDataType>HL7V2</outboundDataType>
+      </transformer>
+      <responseTransformer>
+        <inboundDataType>HL7V2</inboundDataType>
+        <outboundDataType>HL7V2</outboundDataType>
+      </responseTransformer>
+      <filter></filter>
+      <transportName>File Writer</transportName>
+      <mode>DESTINATION</mode>
+      <enabled>true</enabled>
+      <waitForPrevious>true</waitForPrevious>
+    </connector>
+  </destinationConnectors>
+  <preprocessingScript>return message;</preprocessingScript>
+  <postprocessingScript>return;</postprocessingScript>
+  <deployScript>return;</deployScript>
+  <undeployScript>return;</undeployScript>
+  <properties>
+    <clearGlobalChannelMap>true</clearGlobalChannelMap>
+    <messageStorageMode>DEVELOPMENT</messageStorageMode>
+    <encryptData>false</encryptData>
+    <removeContentOnCompletion>false</removeContentOnCompletion>
+    <removeOnlyFilteredOnCompletion>false</removeOnlyFilteredOnCompletion>
+    <removeAttachmentsOnCompletion>false</removeAttachmentsOnCompletion>
+    <initialState>STARTED</initialState>
+    <storeAttachments>false</storeAttachments>
+  </properties>
+</channel>

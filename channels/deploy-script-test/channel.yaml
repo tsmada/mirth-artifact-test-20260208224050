@@ -1,0 +1,7 @@
+id: 77100001-0001-0001-0001-000000000002
+name: Deploy Script Test
+version: 3.9.1
+revision: 1
+enabled: true
+description: Tests deploy script execution on channel start - sets $gc values
+nextMetaDataId: 2

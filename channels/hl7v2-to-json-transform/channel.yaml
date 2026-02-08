@@ -1,0 +1,6 @@
+id: 71210001-0001-0001-0001-000000000001
+name: HL7v2 to JSON Transform
+version: ''
+revision: 3
+enabled: true
+description: Extract patient/lab data from HL7v2 and output as JSON using JavaScript

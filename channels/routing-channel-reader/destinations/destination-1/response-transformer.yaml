@@ -1,0 +1,103 @@
+version: 3.8.0
+inboundDataType: HL7V2
+outboundDataType: HL7V2
+inboundProperties:
+  serializationProperties:
+    handleRepetitions: 'true'
+    handleSubcomponents: 'true'
+    useStrictParser: 'false'
+    useStrictValidation: 'false'
+    stripNamespaces: 'true'
+    segmentDelimiter: \r
+    convertLineBreaks: 'true'
+    '#text': '                                                                                              '
+    '@_class': com.mirth.connect.plugins.datatypes.hl7v2.HL7v2SerializationProperties
+    '@_version': 3.8.0
+  deserializationProperties:
+    useStrictParser: 'false'
+    useStrictValidation: 'false'
+    segmentDelimiter: \r
+    '#text': '                                              '
+    '@_class': com.mirth.connect.plugins.datatypes.hl7v2.HL7v2DeserializationProperties
+    '@_version': 3.8.0
+  batchProperties:
+    splitType: MSH_Segment
+    batchScript: ''
+    '#text': '                                  '
+    '@_class': com.mirth.connect.plugins.datatypes.hl7v2.HL7v2BatchProperties
+    '@_version': 3.8.0
+  responseGenerationProperties:
+    segmentDelimiter: \r
+    successfulACKCode: AA
+    successfulACKMessage: ''
+    errorACKCode: AE
+    errorACKMessage: An Error Occurred Processing Message.
+    rejectedACKCode: AR
+    rejectedACKMessage: Message Rejected.
+    msh15ACKAccept: 'false'
+    dateFormat: yyyyMMddHHmmss.SSS
+    '#text': '                                                                                                                      '
+    '@_class': com.mirth.connect.plugins.datatypes.hl7v2.HL7v2ResponseGenerationProperties
+    '@_version': 3.8.0
+  responseValidationProperties:
+    successfulACKCode: AA,CA
+    errorACKCode: AE,CE
+    rejectedACKCode: AR,CR
+    validateMessageControlId: 'true'
+    originalMessageControlId: Destination_Encoded
+    originalIdMapVariable: ''
+    '#text': '                                                                                  '
+    '@_class': com.mirth.connect.plugins.datatypes.hl7v2.HL7v2ResponseValidationProperties
+    '@_version': 3.8.0
+  '#text': '                                                          '
+inboundPropertiesClass: com.mirth.connect.plugins.datatypes.hl7v2.HL7v2DataTypeProperties
+outboundProperties:
+  serializationProperties:
+    handleRepetitions: 'true'
+    handleSubcomponents: 'true'
+    useStrictParser: 'false'
+    useStrictValidation: 'false'
+    stripNamespaces: 'true'
+    segmentDelimiter: \r
+    convertLineBreaks: 'true'
+    '#text': '                                                                                              '
+    '@_class': com.mirth.connect.plugins.datatypes.hl7v2.HL7v2SerializationProperties
+    '@_version': 3.8.0
+  deserializationProperties:
+    useStrictParser: 'false'
+    useStrictValidation: 'false'
+    segmentDelimiter: \r
+    '#text': '                                              '
+    '@_class': com.mirth.connect.plugins.datatypes.hl7v2.HL7v2DeserializationProperties
+    '@_version': 3.8.0
+  batchProperties:
+    splitType: MSH_Segment
+    batchScript: ''
+    '#text': '                                  '
+    '@_class': com.mirth.connect.plugins.datatypes.hl7v2.HL7v2BatchProperties
+    '@_version': 3.8.0
+  responseGenerationProperties:
+    segmentDelimiter: \r
+    successfulACKCode: AA
+    successfulACKMessage: ''
+    errorACKCode: AE
+    errorACKMessage: An Error Occurred Processing Message.
+    rejectedACKCode: AR
+    rejectedACKMessage: Message Rejected.
+    msh15ACKAccept: 'false'
+    dateFormat: yyyyMMddHHmmss.SSS
+    '#text': '                                                                                                                      '
+    '@_class': com.mirth.connect.plugins.datatypes.hl7v2.HL7v2ResponseGenerationProperties
+    '@_version': 3.8.0
+  responseValidationProperties:
+    successfulACKCode: AA,CA
+    errorACKCode: AE,CE
+    rejectedACKCode: AR,CR
+    validateMessageControlId: 'true'
+    originalMessageControlId: Destination_Encoded
+    originalIdMapVariable: ''
+    '#text': '                                                                                  '
+    '@_class': com.mirth.connect.plugins.datatypes.hl7v2.HL7v2ResponseValidationProperties
+    '@_version': 3.8.0
+  '#text': '                                                          '
+outboundPropertiesClass: com.mirth.connect.plugins.datatypes.hl7v2.HL7v2DataTypeProperties

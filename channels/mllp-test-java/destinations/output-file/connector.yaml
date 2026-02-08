@@ -1,0 +1,96 @@
+name: Output File
+metaDataId: 1
+transportName: File Writer
+mode: DESTINATION
+enabled: true
+propertiesClass: com.mirth.connect.connectors.file.FileDispatcherProperties
+propertiesVersion: 3.9.1
+waitForPrevious: true
+properties:
+  pluginProperties: ''
+  destinationConnectorProperties:
+    queueEnabled: 'false'
+    sendFirst: 'false'
+    retryIntervalMillis: '10000'
+    regenerateTemplate: 'false'
+    retryCount: '0'
+    rotate: 'false'
+    includeFilterTransformer: 'false'
+    threadCount: '1'
+    threadAssignmentVariable: ''
+    validateResponse: 'false'
+    resourceIds:
+      entry:
+        - string:
+            - Default Resource
+            - '[Default Resource]'
+          '#text': |2-
+
+                          
+                          
+                        
+      '#text': |2-
+
+                    
+                  
+      '@_class': linked-hash-map
+    queueBufferSize: '1000'
+    reattachAttachments: 'true'
+    '#text': |2-
+
+                
+                
+                
+                
+                
+                
+                
+                
+                
+                
+                
+                
+                
+              
+    '@_version': 3.9.1
+  scheme: FILE
+  host: /tmp/mirth-validation/java
+  outputPattern: msg-${UUID}.txt
+  anonymous: 'true'
+  username: ${MLLP_TEST_JAVA_OUTPUT_FILE_USERNAME}
+  password: ${MLLP_TEST_JAVA_OUTPUT_FILE_PASSWORD}
+  timeout: '10000'
+  keepConnectionOpen: 'true'
+  maxIdleTime: '0'
+  secure: 'true'
+  passive: 'true'
+  validateConnection: 'true'
+  outputAppend: 'true'
+  errorOnExists: 'false'
+  temporary: 'false'
+  binary: 'false'
+  charsetEncoding: DEFAULT_ENCODING
+  template: ${message.encodedData}
+  '#text': |2-
+
+            
+            
+            
+            
+            
+            
+            
+            
+            
+            
+            
+            
+            
+            
+            
+            
+            
+            
+            
+            
+          
